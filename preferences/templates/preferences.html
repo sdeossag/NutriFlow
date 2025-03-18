@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriFlow - Preferences</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f0fdf4;
+            color: #064e3b;
+            margin: 0;
+            padding: 0;
+        }
+        header, footer {
+            background-color: #10b981;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        .container {
+            padding: 2rem;
+            background-color: #d1fae5;
+            border-radius: 10px;
+            width: 50%;
+            margin: 2rem auto;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #065f46;
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            border: 1px solid #065f46;
+        }
+        button {
+            background-color: #10b981;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #059669;
+        }
+        #resultados {
+            margin-top: 2rem;
+            background-color: #d1fae5;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">NutriFlow</div>
+    </header>
+    <div class="container">
+        <h2>Configura tus Preferencias</h2>
+        <form id="preferencesForm">
+            <label>Género:</label>
+            <select id="genero" required>
+                <option value="">Selecciona tu género</option>
+                <option value="male">Hombre</option>
+                <option value="female">Mujer</option>
+            </select>
+            <label>Objetivo Nutricional:</label>
+            <select id="objetivo" required>
+                <option value="">Selecciona tu objetivo</option>
+                <option value="lose_weight">Bajar de peso</option>
+                <option value="improve_health">Mejorar mi salud</option>
+                <option value="gain_weight">Subir de peso</option>
+            </select>
+            <label>Edad:</label>
+            <input type="number" id="edad" placeholder="Ej: 25" required>
+            <label>Peso (kg):</label>
+            <input type="number" id="peso" placeholder="Ej: 70" required>
+            <label>Altura (cm):</label>
+            <input type="number" id="altura" placeholder="Ej: 170" required>
+            <label>Nivel de actividad física:</label>
+            <select id="nivel_actividad" required>
+                <option value="">Selecciona el nivel</option>
+                <option value="sedentario">Sedentario</option>
+                <option value="ligero">Ligero</option>
+                <option value="moderado">Moderado</option>
+                <option value="activo">Activo</option>
+                <option value="muy_activo">Muy Activo</option>
+            </select>
+            <button type="button" onclick="calcularRequerimientos()">Calcular</button>
+        </form>
+        <div id="resultados"></div>
+    </div>
+    <footer>
+        <p>&copy; 2025 NutriFlow. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        function calcularRequerimientos() {
+            // Obtener valores del formulario
+            const genero = document.getElementById("genero").value;
+            const objetivo = document.getElementById("objetivo").value;
+            const edad = parseInt(document.getElementById("edad").value);
+            const peso = parseFloat(document.getElementById("peso").value);
+            const altura = parseFloat(document.getElementById("altura").value);
+            const nivelActividad = document.getElementById("nivel_actividad").value;
+
+            // Validación simple
+            if (!genero || !objetivo || isNaN(edad) || isNaN(peso) || isNaN(altura) || !nivelActividad) {
+                alert("Por favor, completa todos los campos.");
+                return;
+            }
+
+            // Fórmula de Harris-Benedict para TMB
+            let tmb = genero === "male"
+                ? 10 * peso + 6.25 * altura - 5 * edad + 5
+                : 10 * peso + 6.25 * altura - 5 * edad - 161;
+
+            // Ajuste según el nivel de actividad física
+            const factoresActividad = {
+                "sedentario": 1.2,
+                "ligero": 1.375,
+                "moderado": 1.55,
+                "activo": 1.725,
+                "muy_activo": 1.9
+            };
+            const caloriasMantenimiento = tmb * factoresActividad[nivelActividad];
+
+            // Ajuste según el objetivo
+            let caloriasObjetivo;
+            if (objetivo === "lose_weight") caloriasObjetivo = caloriasMantenimiento * 0.85;
+            else if (objetivo === "gain_weight") caloriasObjetivo = caloriasMantenimiento * 1.15;
+            else caloriasObjetivo = caloriasMantenimiento;
+
+            // Distribución de macronutrientes
+            const proteinas = (objetivo === "gain_weight" ? peso * 2.0 : objetivo === "lose_weight" ? peso * 1.2 : peso * 1.6);
+            const grasas = (caloriasObjetivo * 0.25) / 9;
+            const carbohidratos = (caloriasObjetivo - (proteinas * 4 + grasas * 9)) / 4;
+
+            // Mostrar resultados
+            const resultadosDiv = document.getElementById("resultados");
+            resultadosDiv.innerHTML = `
+                <h3>Requerimientos Nutricionales</h3>
+                <p>Calorías: ${caloriasObjetivo.toFixed(2)} kcal</p>
+                <p>Proteínas: ${proteinas.toFixed(2)} g</p>
+                <p>Grasas: ${grasas.toFixed(2)} g</p>
+                <p>Carbohidratos: ${carbohidratos.toFixed(2)} g</p>
+            `;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriFlow - Healthy Meal Planning</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f0fdf4;
+            color: #064e3b;
+            margin: 0;
+            padding: 0;
+        }
+        header, footer {
+            background-color: #10b981;
+            color: white;
+            padding: 1rem 0;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 1rem;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+        }
+        .cta-button {
+            background-color: #047857;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+        .cta-button:hover {
+            background-color: #065f46;
+        }
+        .hero {
+            background-color: #d1fae5;
+            padding: 2rem 0;
+            text-align: center;
+        }
+        .info-section {
+            padding: 2rem 0;
+            background-color: #f0fdf4;
+        }
+        h1, h2, h3 {
+            color: #065f46;
+        }
+        button {
+            background-color: #10b981;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #059669;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">NutriFlow</div>
+            <nav>
+                <ul>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#plans">Plans</a></li>
+                    <li><a href="#benefits">Benefits</a></li>
+                    <li><a href="/preferences">Preferences</a></li>
+                    <li><a href="#signup" class="cta-button">Get Started</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <div class="container">
+            <h1>Personalized Nutrition Made Easy</h1>
+            <p>Get customized meal plans tailored to your goals, budget, and dietary needs.</p>
+            <a href="signup" class="cta-button">Start Now</a>
+        </div>
+    </section>
+    
+    <section id="how-it-works" class="info-section">
+        <div class="container">
+            <h2>How NutriFlow Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <h3>1. Choose Your Goal</h3>
+                    <p>Weight loss, muscle gain, or balanced nutrition.</p>
+                </div>
+                <div class="step">
+                    <h3>2. Get Your Plan</h3>
+                    <p>Personalized meal plans generated instantly.</p>
+                </div>
+                <div class="step">
+                    <h3>3. Shop Smart</h3>
+                    <p>Compare grocery prices and save money.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="plans" class="info-section">
+        <div class="container">
+            <h2>Our Plans</h2>
+            <div class="plan-options">
+                <div class="plan">
+                    <h3>Basic</h3>
+                    <p>Weekly meal plans and grocery lists.</p>
+                </div>
+                <div class="plan">
+                    <h3>Premium</h3>
+                    <p>Real-time adjustments and advanced tracking.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="benefits" class="info-section">
+        <div class="container">
+            <h2>Why Choose NutriFlow?</h2>
+            <ul>
+                <li>80% of people fail their diet without proper planning.</li>
+                <li>Save up to 30% on grocery expenses.</li>
+                <li>Enjoy hassle-free meal preparation.</li>
+            </ul>
+        </div>
+    </section>
+    
+    <section id="signup" class="info-section">
+        <div class="container">
+            <h2>Get Started Today</h2>
+            <form action="#">
+                <input type="email" placeholder="Enter your email" required>
+                <button type="submit">Sign Up</button>
+            </form>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 NutriFlow. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

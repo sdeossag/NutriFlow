@@ -99,6 +99,8 @@
                 <option value="activo">Activo</option>
                 <option value="muy_activo">Muy Activo</option>
             </select>
+            <label>Presupuesto semanal (COP):</label>
+            <input type="number" id="presupuesto" placeholder="Ej: 50" min="0" required>
             <button type="button" onclick="calcularRequerimientos()">Calcular</button>
         </form>
         <div id="resultados"></div>
@@ -116,19 +118,20 @@
             const peso = parseFloat(document.getElementById("peso").value);
             const altura = parseFloat(document.getElementById("altura").value);
             const nivelActividad = document.getElementById("nivel_actividad").value;
+            const presupuesto = parseFloat(document.getElementById("presupuesto").value);
 
-            // Validación simple
-            if (!genero || !objetivo || isNaN(edad) || isNaN(peso) || isNaN(altura) || !nivelActividad) {
+            // Validación de campos
+            if (!genero || !objetivo || isNaN(edad) || isNaN(peso) || isNaN(altura) || !nivelActividad || isNaN(presupuesto)) {
                 alert("Por favor, completa todos los campos.");
                 return;
             }
 
-            // Fórmula de Harris-Benedict para TMB
+            // Cálculo del TMB (Harris-Benedict)
             let tmb = genero === "male"
                 ? 10 * peso + 6.25 * altura - 5 * edad + 5
                 : 10 * peso + 6.25 * altura - 5 * edad - 161;
 
-            // Ajuste según el nivel de actividad física
+            // Ajuste según el nivel de actividad
             const factoresActividad = {
                 "sedentario": 1.2,
                 "ligero": 1.375,
@@ -157,8 +160,11 @@
                 <p>Proteínas: ${proteinas.toFixed(2)} g</p>
                 <p>Grasas: ${grasas.toFixed(2)} g</p>
                 <p>Carbohidratos: ${carbohidratos.toFixed(2)} g</p>
+                <h3>Presupuesto</h3>
+                <p>Presupuesto semanal: $${presupuesto.toFixed(2)}</p>
             `;
         }
     </script>
 </body>
 </html>
+

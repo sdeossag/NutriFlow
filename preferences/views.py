@@ -8,6 +8,8 @@ from django.http import JsonResponse
 def preferences(request):
     preference = Preferences.objects.all()
     return render(request, 'preferences.html', {'preference': preference})
+def signupaccount(request):
+    return render(request, 'signupaccount.html', {'signupaccount': 'signupaccount'})
 
 
 @csrf_exempt  # Evita problemas de CSRF en desarrollo

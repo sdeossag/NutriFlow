@@ -77,7 +77,13 @@
                     <li><a href="#plans">Plans</a></li>
                     <li><a href="#benefits">Benefits</a></li>
                     <li><a href="/preferences">Preferences</a></li>
-                    <li><a href="#signup" class="cta-button">Get Started</a></li>
+                    
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'logoutaccount' %}" class="cta-button">Logout ({{ user.username }})</a></li>
+                    {% else %}
+                        <li><a href="{% url 'loginaccount' %}">Login</a></li>
+                        <li><a href="{% url 'signupaccount' %}" class="cta-button">Get Started</a></li>
+                    {% endif %}
                 </ul>
             </nav>
         </div>
@@ -87,7 +93,7 @@
         <div class="container">
             <h1>Personalized Nutrition Made Easy</h1>
             <p>Get customized meal plans tailored to your goals, budget, and dietary needs.</p>
-            <a href="signup" class="cta-button">Start Now</a>
+            <a href="loginaccount" class="cta-button">Start Now</a>
         </div>
     </section>
     

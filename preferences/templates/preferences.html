@@ -100,7 +100,9 @@
                 <option value="muy_activo">Muy Activo</option>
             </select>
             <label>Presupuesto semanal (COP):</label>
-            <input type="number" id="presupuesto" placeholder="Ej: 50" min="0" required>
+            <input type="number" id="presupuesto" placeholder="Ej: 50000" min="0" required>
+            <label>Alergias alimentarias (separadas por comas):</label>
+            <input type="text" id="alergias" placeholder="Ej: maní, mariscos, gluten">
             <button type="button" onclick="calcularRequerimientos()">Calcular</button>
         </form>
         <div id="resultados"></div>
@@ -111,7 +113,6 @@
 
     <script>
         function calcularRequerimientos() {
-            // Obtener valores del formulario
             const genero = document.getElementById("genero").value;
             const objetivo = document.getElementById("objetivo").value;
             const edad = parseInt(document.getElementById("edad").value);
@@ -119,19 +120,17 @@
             const altura = parseFloat(document.getElementById("altura").value);
             const nivelActividad = document.getElementById("nivel_actividad").value;
             const presupuesto = parseFloat(document.getElementById("presupuesto").value);
+            const alergias = document.getElementById("alergias").value.trim();
 
-            // Validación de campos
             if (!genero || !objetivo || isNaN(edad) || isNaN(peso) || isNaN(altura) || !nivelActividad || isNaN(presupuesto)) {
-                alert("Por favor, completa todos los campos.");
+                alert("Por favor, completa todos los campos obligatorios.");
                 return;
             }
 
-            // Cálculo del TMB (Harris-Benedict)
             let tmb = genero === "male"
                 ? 10 * peso + 6.25 * altura - 5 * edad + 5
                 : 10 * peso + 6.25 * altura - 5 * edad - 161;
 
-            // Ajuste según el nivel de actividad
             const factoresActividad = {
                 "sedentario": 1.2,
                 "ligero": 1.375,
@@ -141,18 +140,15 @@
             };
             const caloriasMantenimiento = tmb * factoresActividad[nivelActividad];
 
-            // Ajuste según el objetivo
             let caloriasObjetivo;
             if (objetivo === "lose_weight") caloriasObjetivo = caloriasMantenimiento * 0.85;
             else if (objetivo === "gain_weight") caloriasObjetivo = caloriasMantenimiento * 1.15;
             else caloriasObjetivo = caloriasMantenimiento;
 
-            // Distribución de macronutrientes
             const proteinas = (objetivo === "gain_weight" ? peso * 2.0 : objetivo === "lose_weight" ? peso * 1.2 : peso * 1.6);
             const grasas = (caloriasObjetivo * 0.25) / 9;
             const carbohidratos = (caloriasObjetivo - (proteinas * 4 + grasas * 9)) / 4;
 
-            // Mostrar resultados
             const resultadosDiv = document.getElementById("resultados");
             resultadosDiv.innerHTML = `
                 <h3>Requerimientos Nutricionales</h3>
@@ -162,6 +158,8 @@
                 <p>Carbohidratos: ${carbohidratos.toFixed(2)} g</p>
                 <h3>Presupuesto</h3>
                 <p>Presupuesto semanal: $${presupuesto.toFixed(2)}</p>
+                <h3>Alergias alimentarias</h3>
+                <p>${alergias ? alergias : "Ninguna alergia registrada"}</p>
             `;
         }
     </script>

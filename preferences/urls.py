@@ -1,8 +1,7 @@
 from django.urls import path
-from .views import preferences, save_preferences, update_budget
+from . import views
 
 urlpatterns = [
-    path("", preferences, name="preferences"),  # Agrega esta línea
-    path("save/", save_preferences, name="save_preferences"),
-    path("update-budget/", update_budget, name="update_budget"),
+    path('', views.preferences_view, name='preferences'),
+    path('save-preferences/', views.save_preferences, name='save_preferences'),
 ]

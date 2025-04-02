@@ -55,114 +55,62 @@
         button:hover {
             background-color: #059669;
         }
-        #resultados {
-            margin-top: 2rem;
-            background-color: #d1fae5;
-            padding: 1rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
     </style>
 </head>
 <body>
     <header>
         <div class="logo">NutriFlow</div>
     </header>
+    
     <div class="container">
         <h2>Configura tus Preferencias</h2>
-        <form id="preferencesForm">
+        
+        <form id="preferencesForm" method="POST" action="{% url 'save_preferences' %}">
+            {% csrf_token %}
+
             <label>Género:</label>
-            <select id="genero" required>
-                <option value="">Selecciona tu género</option>
-                <option value="male">Hombre</option>
-                <option value="female">Mujer</option>
+            <select name="genero" required>
+                <option value="male" {% if preferences.genero == "male" %}selected{% endif %}>Hombre</option>
+                <option value="female" {% if preferences.genero == "female" %}selected{% endif %}>Mujer</option>
             </select>
+
             <label>Objetivo Nutricional:</label>
-            <select id="objetivo" required>
-                <option value="">Selecciona tu objetivo</option>
-                <option value="lose_weight">Bajar de peso</option>
-                <option value="improve_health">Mejorar mi salud</option>
-                <option value="gain_weight">Subir de peso</option>
+            <select name="objetivo" required>
+                <option value="lose_weight" {% if preferences.objetivo == "lose_weight" %}selected{% endif %}>Bajar de peso</option>
+                <option value="improve_health" {% if preferences.objetivo == "improve_health" %}selected{% endif %}>Mejorar mi salud</option>
+                <option value="gain_weight" {% if preferences.objetivo == "gain_weight" %}selected{% endif %}>Subir de peso</option>
             </select>
+
             <label>Edad:</label>
-            <input type="number" id="edad" placeholder="Ej: 25" required>
+            <input type="number" name="edad" value="{{ preferences.edad }}" required>
+
             <label>Peso (kg):</label>
-            <input type="number" id="peso" placeholder="Ej: 70" required>
+            <input type="number" name="peso" value="{{ preferences.peso }}" required>
+
             <label>Altura (cm):</label>
-            <input type="number" id="altura" placeholder="Ej: 170" required>
+            <input type="number" name="altura" value="{{ preferences.altura }}" required>
+
             <label>Nivel de actividad física:</label>
-            <select id="nivel_actividad" required>
-                <option value="">Selecciona el nivel</option>
-                <option value="sedentario">Sedentario</option>
-                <option value="ligero">Ligero</option>
-                <option value="moderado">Moderado</option>
-                <option value="activo">Activo</option>
-                <option value="muy_activo">Muy Activo</option>
+            <select name="nivel_actividad" required>
+                <option value="sedentario" {% if preferences.nivel_actividad == "sedentario" %}selected{% endif %}>Sedentario</option>
+                <option value="ligero" {% if preferences.nivel_actividad == "ligero" %}selected{% endif %}>Ligero</option>
+                <option value="moderado" {% if preferences.nivel_actividad == "moderado" %}selected{% endif %}>Moderado</option>
+                <option value="activo" {% if preferences.nivel_actividad == "activo" %}selected{% endif %}>Activo</option>
+                <option value="muy_activo" {% if preferences.nivel_actividad == "muy_activo" %}selected{% endif %}>Muy Activo</option>
             </select>
+
             <label>Presupuesto semanal (COP):</label>
-            <input type="number" id="presupuesto" placeholder="Ej: 50000" min="0" required>
+            <input type="number" name="presupuesto" value="{{ preferences.presupuesto }}" required>
+
             <label>Alergias alimentarias (separadas por comas):</label>
-            <input type="text" id="alergias" placeholder="Ej: maní, mariscos, gluten">
-            <button type="button" onclick="calcularRequerimientos()">Calcular</button>
+            <input type="text" name="alergias" value="{{ preferences.alergias }}">
+
+            <button type="submit">Guardar</button>
         </form>
-        <div id="resultados"></div>
     </div>
+
     <footer>
         <p>&copy; 2025 NutriFlow. Todos los derechos reservados.</p>
     </footer>
-
-    <script>
-        function calcularRequerimientos() {
-            const genero = document.getElementById("genero").value;
-            const objetivo = document.getElementById("objetivo").value;
-            const edad = parseInt(document.getElementById("edad").value);
-            const peso = parseFloat(document.getElementById("peso").value);
-            const altura = parseFloat(document.getElementById("altura").value);
-            const nivelActividad = document.getElementById("nivel_actividad").value;
-            const presupuesto = parseFloat(document.getElementById("presupuesto").value);
-            const alergias = document.getElementById("alergias").value.trim();
-
-            if (!genero || !objetivo || isNaN(edad) || isNaN(peso) || isNaN(altura) || !nivelActividad || isNaN(presupuesto)) {
-                alert("Por favor, completa todos los campos obligatorios.");
-                return;
-            }
-
-            let tmb = genero === "male"
-                ? 10 * peso + 6.25 * altura - 5 * edad + 5
-                : 10 * peso + 6.25 * altura - 5 * edad - 161;
-
-            const factoresActividad = {
-                "sedentario": 1.2,
-                "ligero": 1.375,
-                "moderado": 1.55,
-                "activo": 1.725,
-                "muy_activo": 1.9
-            };
-            const caloriasMantenimiento = tmb * factoresActividad[nivelActividad];
-
-            let caloriasObjetivo;
-            if (objetivo === "lose_weight") caloriasObjetivo = caloriasMantenimiento * 0.85;
-            else if (objetivo === "gain_weight") caloriasObjetivo = caloriasMantenimiento * 1.15;
-            else caloriasObjetivo = caloriasMantenimiento;
-
-            const proteinas = (objetivo === "gain_weight" ? peso * 2.0 : objetivo === "lose_weight" ? peso * 1.2 : peso * 1.6);
-            const grasas = (caloriasObjetivo * 0.25) / 9;
-            const carbohidratos = (caloriasObjetivo - (proteinas * 4 + grasas * 9)) / 4;
-
-            const resultadosDiv = document.getElementById("resultados");
-            resultadosDiv.innerHTML = `
-                <h3>Requerimientos Nutricionales</h3>
-                <p>Calorías: ${caloriasObjetivo.toFixed(2)} kcal</p>
-                <p>Proteínas: ${proteinas.toFixed(2)} g</p>
-                <p>Grasas: ${grasas.toFixed(2)} g</p>
-                <p>Carbohidratos: ${carbohidratos.toFixed(2)} g</p>
-                <h3>Presupuesto</h3>
-                <p>Presupuesto semanal: $${presupuesto.toFixed(2)}</p>
-                <h3>Alergias alimentarias</h3>
-                <p>${alergias ? alergias : "Ninguna alergia registrada"}</p>
-            `;
-        }
-    </script>
 </body>
 </html>
-

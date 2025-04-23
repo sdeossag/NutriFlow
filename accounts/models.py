@@ -14,3 +14,12 @@ class Preferences(models.Model):
 
     def __str__(self):
         return f"Preferencias de {self.user.username}"
+    
+class DailyLog(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateField(auto_now_add=True)
+    calorias = models.IntegerField(default=0)
+    proteinas = models.IntegerField(default=0)
+    carbohidratos = models.IntegerField(default=0)
+    grasas = models.IntegerField(default=0)
+

@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from preferences.models import Preferences
 
 # Create your models here.
 class Meal(models.Model):
@@ -15,7 +15,3 @@ class Meal(models.Model):
     def __str__(self):
         return self.name
     
-class Preferences(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="meal_preferences")  # 👈 Diferencia este modelo
-    dietary_restrictions = models.TextField()
-    budget = models.DecimalField(max_digits=10, decimal_places=2)

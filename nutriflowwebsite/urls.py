@@ -29,6 +29,10 @@ urlpatterns = [
     path('preferences/', include('preferences.urls')),
     path('accounts/', include('accounts.urls')),
     path('loginaccount/', accountViews.loginaccount),
-]
+    path('accounts/', include('accounts.urls')),
+    path('perfil/', accountViews.profile_view, name='profile'),
+    path('supermarket/', include('supermarket.urls')),
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'meal',
     'preferences',
     'accounts', 
+    'supermarket',
 ]
 
 MIDDLEWARE = [

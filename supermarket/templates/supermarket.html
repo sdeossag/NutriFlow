@@ -43,7 +43,13 @@
       align-items: center;
       font-size: 2.2rem;
       font-weight: 700;
+    }
+
+    .logo a {
       color: white;
+      display: flex;
+      align-items: center;
+      text-decoration: none;
     }
 
     .logo img {
@@ -194,12 +200,14 @@
   <header>
     <div class="container-flex">
       <div class="logo">
-        <img src="/media/images/nutriflowlogo.png" alt="Logo de NutriFlow" />
-        <span style="margin-left: 12px;">NutriFlow</span>
+        <a href="/">
+          <img src="/media/images/nutriflowlogo.png" alt="Logo de NutriFlow" />
+          <span style="margin-left: 12px;">NutriFlow</span>
+        </a>
       </div>
       <nav>
         <ul>
-            <li><a href="/">Inicio</a></li>
+          <li><a href="/">Inicio</a></li>
           <li><a href="{% url 'preferences' %}">Preferencias</a></li>
           <li><a href="/perfil/">Perfil</a></li>
           {% if user.is_authenticated %}
@@ -215,10 +223,10 @@
 
   <div class="search-form">
     <form method="get" action="{% url 'supermarket' %}">
-      <input type="text" name="filtro_supermercado" placeholder="Supermercado" value="{{ request.GET.filtro_supermercado }}">
-      <input type="text" name="filtro_nombre_producto" placeholder="Nombre del producto" value="{{ request.GET.filtro_nombre_producto }}">
-      <input type="text" name="filtro_marca" placeholder="Marca del producto" value="{{ request.GET.filtro_marca }}">
-      <input type="number" name="filtro_precio" placeholder="Precio máximo" value="{{ request.GET.filtro_precio }}">
+      <input type="text" name="supermarket" placeholder="Supermercado" value="{{ request.GET.supermarket }}">
+      <input type="text" name="product_name" placeholder="Nombre del producto" value="{{ request.GET.product_name }}">
+      <input type="text" name="product_brand" placeholder="Marca del producto" value="{{ request.GET.product_brand }}">
+      <input type="number" name="price" placeholder="Precio máximo" value="{{ request.GET.price }}">
       <button type="submit">Buscar</button>
     </form>
   </div>
@@ -239,21 +247,44 @@
     {% endfor %}
   </div>
 
-  <div class="pagination">
-    <span class="step-links">
-      {% if page_obj.has_previous %}
-        <a href="?page=1{% if request.GET.filtro_supermercado %}&filtro_supermercado={{ request.GET.filtro_supermercado }}{% endif %}">Primera</a>
-        <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.filtro_supermercado %}&filtro_supermercado={{ request.GET.filtro_supermercado }}{% endif %}">Anterior</a>
-      {% endif %}
-      <span class="current">
-        Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
-      </span>
-      {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}{% if request.GET.filtro_supermercado %}&filtro_supermercado={{ request.GET.filtro_supermercado }}{% endif %}">Siguiente</a>
-        <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.filtro_supermercado %}&filtro_supermercado={{ request.GET.filtro_supermercado }}{% endif %}">Última</a>
-      {% endif %}
-    </span>
-  </div>
+    <div class="pagination">
+        <span class="step-links">
+          {% if page_obj.has_previous %}
+            <a href="?page=1
+              {% if request.GET.supermarket %}&supermarket={{ request.GET.supermarket }}{% endif %}
+              {% if request.GET.product_name %}&product_name={{ request.GET.product_name }}{% endif %}
+              {% if request.GET.product_brand %}&product_brand={{ request.GET.product_brand }}{% endif %}
+              {% if request.GET.price %}&price={{ request.GET.price }}{% endif %}
+            ">Primera</a>
+            <a href="?page={{ page_obj.previous_page_number }}
+              {% if request.GET.supermarket %}&supermarket={{ request.GET.supermarket }}{% endif %}
+              {% if request.GET.product_name %}&product_name={{ request.GET.product_name }}{% endif %}
+              {% if request.GET.product_brand %}&product_brand={{ request.GET.product_brand }}{% endif %}
+              {% if request.GET.price %}&price={{ request.GET.price }}{% endif %}
+            ">Anterior</a>
+          {% endif %}
+      
+          <span class="current">
+            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+          </span>
+      
+          {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}
+              {% if request.GET.supermarket %}&supermarket={{ request.GET.supermarket }}{% endif %}
+              {% if request.GET.product_name %}&product_name={{ request.GET.product_name }}{% endif %}
+              {% if request.GET.product_brand %}&product_brand={{ request.GET.product_brand }}{% endif %}
+              {% if request.GET.price %}&price={{ request.GET.price }}{% endif %}
+            ">Siguiente</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}
+              {% if request.GET.supermarket %}&supermarket={{ request.GET.supermarket }}{% endif %}
+              {% if request.GET.product_name %}&product_name={{ request.GET.product_name }}{% endif %}
+              {% if request.GET.product_brand %}&product_brand={{ request.GET.product_brand }}{% endif %}
+              {% if request.GET.price %}&price={{ request.GET.price }}{% endif %}
+            ">Última</a>
+          {% endif %}
+        </span>
+      </div>
+      
 
   <footer>
     <div class="container-flex">

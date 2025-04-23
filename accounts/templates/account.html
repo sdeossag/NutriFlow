@@ -117,6 +117,21 @@
         .progreso {
             margin-top: 30px;
         }
+         
+        footer {
+            background-color: var(--verde-vitalidad);
+            color: white;
+            padding: 1.5rem 0;
+            margin-top: 3rem;
+        }
+
+        footer p {
+            text-align: center;
+            margin: 0;
+            font-size: 1.1rem;
+            color: white;
+        }
+
 
         .barra {
             height: 20px;
@@ -133,7 +148,8 @@
             text-align: center;
             border-radius: 10px;
         }
-
+        
+        
         .calorias { background-color: #4caf50; }
         .proteinas { background-color: #2196f3; }
         .carbohidratos { background-color: #ff9800; }
@@ -204,6 +220,10 @@
         <div class="barra"><div class="relleno grasas" style="width: {{ porcentaje_grasas }}%;">{{ porcentaje_grasas }}%</div></div>
     </div>
 </div>
-
+<footer>
+    <div class="footer">
+      <p>&copy; 2025 NutriFlow. Todos los derechos reservados.</p>
+    </div>
+</footer>
 </body>
 </html>

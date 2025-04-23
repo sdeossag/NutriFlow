@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NutriFlow - Healthy Meal Planning</title>
+  <title>NutriFlow - Dieta Recomendada</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -82,59 +82,30 @@
       background-color: #27692b;
     }
 
-    .hero {
-      position: relative;
-      height: 90vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      overflow: hidden;
-    }
-
-    .hero-overlay {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: rgba(255, 255, 255, 0.9);
-      z-index: 1;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      max-width: 700px;
-      margin: 0 auto;
+    main {
+      max-width: 900px;
+      margin: 3rem auto;
       padding: 2rem;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
-    .hero h1 {
-      font-size: 3.2rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
+    h1, h3 {
       color: var(--verde-profundo);
     }
 
-    .hero p {
-      font-size: 1.5rem;
-      margin-bottom: 1.5rem;
-      color: var(--verde-profundo);
+    p {
+      line-height: 1.6;
+      white-space: pre-wrap;
     }
 
-    button {
-      background-color: var(--verde-vitalidad);
-      color: white;
-      padding: 0.6rem 1.2rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 1rem;
-      transition: background-color 0.3s;
+    ul {
+      padding-left: 1.5rem;
     }
 
-    button:hover {
-      background-color: #3e8e41;
+    li {
+      margin-bottom: 0.7rem;
     }
 
     footer p {
@@ -142,7 +113,6 @@
       margin: 0;
       font-size: 1.1rem;
       padding-top: 0.5rem;
-      color: white;
     }
   </style>
 </head>
@@ -157,7 +127,7 @@
         <ul>
           <li><a href="/supermarket">Supermarket</a></li>
           <li><a href="/preferences">Preferences</a></li>
-          <li><a href="perfil/">Perfil</a></li>
+          <li><a href="/perfil/">Perfil</a></li>
           <li><a href="{% url 'generate_diet' %}">Generar Dieta</a></li>
           {% if user.is_authenticated %}
             <li><a href="{% url 'logoutaccount' %}" class="cta-button">Logout ({{ user.username }})</a></li>
@@ -170,20 +140,25 @@
     </div>
   </header>
 
-  <section class="hero">
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <h1>Personalized Nutrition Made Easy</h1>
-      <p>Get customized meal plans tailored to your goals, budget, and dietary needs.</p>
-    </div>
-  </section>
+  <main>
+    <h1>Dieta recomendada para ti</h1>
+
+    <h3>Tu plan de dieta personalizado:</h3>
+    <p>{{ diet_recommendation }}</p>
+
+    <h3>Productos usados para tu plan de dieta:</h3>
+    <ul>
+      {% for product in filtered_products %}
+        <li>{{ product.nombre_producto }} - {{ product.marca_producto }} - {{ product.precio_producto }} COP</li>
+      {% endfor %}
+    </ul>
+  </main>
 
   <footer>
-    <div class="footer">
+    <div class="container-flex">
       <p>&copy; 2025 NutriFlow. All rights reserved.</p>
     </div>
   </footer>
 </body>
 </html>
-
 

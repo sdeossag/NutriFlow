@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'preferences',
     'accounts', 
     'supermarket',
+    'ai',
 ]
 
 MIDDLEWARE = [

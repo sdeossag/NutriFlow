@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NutriFlow - Dieta Recomendada</title>
+  <title>NutriFlow - Plan de Comida Personalizado</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    /* Estilos generales */
     :root {
       --verde-vitalidad: #4CAF50;
       --verde-tranquilo: #81C784;
@@ -85,27 +86,24 @@
     main {
       max-width: 900px;
       margin: 3rem auto;
-      padding: 2rem;
       background-color: white;
+      padding: 2.5rem;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-
-    h1, h3 {
-      color: var(--verde-profundo);
-    }
-
-    p {
-      line-height: 1.6;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
       white-space: pre-wrap;
     }
 
-    ul {
-      padding-left: 1.5rem;
+    h2 {
+      font-size: 2.2rem;
+      color: var(--verde-profundo);
+      margin-bottom: 1rem;
     }
 
-    li {
-      margin-bottom: 0.7rem;
+    .error {
+      font-size: 1.3rem;
+      color: red;
+      text-align: center;
+      padding: 1.5rem;
     }
 
     footer p {
@@ -113,6 +111,29 @@
       margin: 0;
       font-size: 1.1rem;
       padding-top: 0.5rem;
+      color: white;
+    }
+
+    /* Estilo para la tabla */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 0.8rem;
+      text-align: left;
+    }
+
+    th {
+      background-color: var(--verde-vitalidad);
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
     }
   </style>
 </head>
@@ -125,10 +146,10 @@
       </div>
       <nav>
         <ul>
-          <li><a href="/supermarket">Supermarket</a></li>
-          <li><a href="/preferences">Preferences</a></li>
+          <li><a href="/">Inicio</a></li>
+          <li><a href="/supermarket">Supermercado</a></li>
+          <li><a href="/preferences">Preferencias</a></li>
           <li><a href="/perfil/">Perfil</a></li>
-          <li><a href="{% url 'generate_diet' %}">Generar Dieta</a></li>
           {% if user.is_authenticated %}
             <li><a href="{% url 'logoutaccount' %}" class="cta-button">Logout ({{ user.username }})</a></li>
           {% else %}
@@ -141,23 +162,18 @@
   </header>
 
   <main>
-    <h1>Dieta recomendada para ti</h1>
-
-    <h3>Tu plan de dieta personalizado:</h3>
-    <p>{{ diet_recommendation }}</p>
-
-    <h3>Productos usados para tu plan de dieta:</h3>
-    <ul>
-      {% for product in filtered_products %}
-        <li>{{ product.nombre_producto }} - {{ product.marca_producto }} - {{ product.precio_producto }} COP</li>
-      {% endfor %}
-    </ul>
+    {% if error %}
+      <p class="error">{{ error }}</p>
+    {% else %}
+      <h2>Tu plan de comidas personalizado</h2>
+      <div class="meal-plan-content">
+        <pre>{{ meal_plan|linebreaksbr }}</pre>
+      </div>
+    {% endif %}
   </main>
 
   <footer>
-    <div class="container-flex">
-      <p>&copy; 2025 NutriFlow. All rights reserved.</p>
-    </div>
+    <p>&copy; 2025 NutriFlow. Todos los derechos reservados.</p>
   </footer>
 </body>
 </html>

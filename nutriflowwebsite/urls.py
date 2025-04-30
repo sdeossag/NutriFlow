@@ -32,7 +32,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('perfil/', accountViews.profile_view, name='profile'),
     path('supermarket/', include('supermarket.urls')),
-    path('ai/', include('ai.urls')),
+    path('ia/', include('ia.urls')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

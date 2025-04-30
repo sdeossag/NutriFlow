@@ -7,7 +7,7 @@ class Command(BaseCommand):
     help = 'Importa productos desde un archivo CSV'
 
     def handle(self, *args, **kwargs):
-        archivo_csv = 'productos_supermercado_carulle.csv'
+        archivo_csv = 'productos_carulle.csv'
         ruta_absoluta = os.path.join(os.getcwd(), archivo_csv)
 
         try:

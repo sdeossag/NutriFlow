@@ -6,7 +6,6 @@
   <title>NutriFlow - Plan de Comida Personalizado</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    /* Estilos generales */
     :root {
       --verde-vitalidad: #4CAF50;
       --verde-tranquilo: #81C784;
@@ -15,23 +14,31 @@
       --gris-natural: #B0BEC5;
     }
 
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Nunito', sans-serif;
       background-color: var(--blanco-pureza);
       color: var(--verde-profundo);
-      margin: 0;
-      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
-    header, footer {
+    header {
       background-color: var(--verde-vitalidad);
       color: white;
-      padding: 1.5rem 0;
+      padding: 2rem 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     .container-flex {
       width: 90%;
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
@@ -42,19 +49,19 @@
       display: flex;
       align-items: center;
       font-size: 2.2rem;
-      font-weight: 700;
+      font-weight: 600;
       color: white;
     }
 
     .logo img {
       height: 60px;
-      vertical-align: middle;
+      margin-right: 12px;
     }
 
     nav ul {
       list-style: none;
       display: flex;
-      gap: 2rem;
+      gap: 1.5rem;
       padding: 0;
       margin: 0;
     }
@@ -62,8 +69,8 @@
     nav a {
       color: white;
       text-decoration: none;
-      font-weight: 700;
-      font-size: 1.2rem;
+      font-weight: 600;
+      font-size: 1.1rem;
       transition: opacity 0.3s ease;
     }
 
@@ -73,10 +80,13 @@
 
     .cta-button {
       background-color: var(--verde-profundo);
-      padding: 0.7rem 1.2rem;
+      padding: 0.9rem 1.6rem;
       border-radius: 8px;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
+      font-weight: 600;
       transition: background-color 0.3s;
+      cursor: pointer;
+      border: none;
     }
 
     .cta-button:hover {
@@ -84,19 +94,20 @@
     }
 
     main {
+      flex: 1; /* Hace que el main ocupe el espacio disponible */
       max-width: 900px;
-      margin: 3rem auto;
+      margin: 4rem auto;
       background-color: white;
-      padding: 2.5rem;
+      padding: 3rem;
       border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      white-space: pre-wrap;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
     }
 
     h2 {
-      font-size: 2.2rem;
+      font-size: 2.5rem;
       color: var(--verde-profundo);
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
     }
 
     .error {
@@ -104,26 +115,73 @@
       color: red;
       text-align: center;
       padding: 1.5rem;
+      background-color: #ffebee;
+      border: 1px solid #f44336;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+    }
+
+    footer {
+      background-color: var(--verde-vitalidad);
+      padding: 1.2rem 0;
+      color: white;
+      text-align: center;
+      font-size: 1.1rem;
+      margin-top: auto; /* Esto asegura que el footer se quede en la parte inferior */
     }
 
     footer p {
-      text-align: center;
       margin: 0;
-      font-size: 1.1rem;
-      padding-top: 0.5rem;
-      color: white;
     }
 
-    /* Estilo para la tabla */
-    table {
-      width: 100%;
-      border-collapse: collapse;
+    .form-container {
       margin-top: 2rem;
     }
 
+    .form-container form {
+      display: inline-block;
+      text-align: center;
+    }
+
+    .form-container button {
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      border-radius: 8px;
+      background-color: var(--verde-profundo);
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .form-container button:hover {
+      background-color: #27692b;
+    }
+
+    .meal-plan-content {
+      background-color: var(--gris-natural);
+      border-radius: 10px;
+      padding: 2rem;
+      margin-top: 2rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      font-size: 1.1rem;
+      line-height: 1.8;
+      text-align: left;
+      white-space: pre-wrap; /* Esto hace que el texto se ajuste adecuadamente */
+      max-height: 500px; /* Limita la altura máxima */
+      overflow-y: auto; /* Añade desplazamiento vertical si el contenido es largo */
+    }
+
+    table {
+      width: 100%;
+      margin-top: 2rem;
+      border-collapse: collapse;
+      font-size: 1.1rem;
+    }
+
     th, td {
+      padding: 1rem;
       border: 1px solid #ddd;
-      padding: 0.8rem;
       text-align: left;
     }
 
@@ -135,14 +193,16 @@
     tr:nth-child(even) {
       background-color: #f9f9f9;
     }
+
   </style>
 </head>
 <body>
+
   <header>
     <div class="container-flex">
       <div class="logo">
         <img src="/media/images/nutriflowlogo.png" alt="NutriFlow Logo" />
-        <span style="margin-left: 12px;">NutriFlow</span>
+        <span>NutriFlow</span>
       </div>
       <nav>
         <ul>
@@ -165,16 +225,32 @@
     {% if error %}
       <p class="error">{{ error }}</p>
     {% else %}
-      <h2>Tu plan de comidas personalizado</h2>
-      <div class="meal-plan-content">
-        <pre>{{ meal_plan|linebreaksbr }}</pre>
+      <h2>Tu Plan de Comidas Personalizado</h2>
+      <p>Para generar tu dieta personalizada, por favor haz clic en el siguiente botón:</p>
+
+      <div class="form-container">
+        <!-- Formulario para generar la dieta -->
+        <form method="post">
+          {% csrf_token %}
+          <button type="submit">Generar mi dieta</button>
+        </form>
       </div>
+
+      {% if meal_plan %}
+        <div class="meal-plan-content">
+          <pre>{{ meal_plan|linebreaksbr }}</pre>
+        </div>
+      {% endif %}
     {% endif %}
   </main>
 
   <footer>
     <p>&copy; 2025 NutriFlow. Todos los derechos reservados.</p>
   </footer>
+
 </body>
 </html>
+
+
+
 

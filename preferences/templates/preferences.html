@@ -5,28 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>NutriFlow - Preferencias</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+  <meta name="csrf-token" content="{{ csrf_token }}">
   <style>
     :root {
       --verde-vitalidad: #4CAF50;
       --verde-claro: #A7F3D0;
       --verde-oscuro: #2E7D32;
-      --blanco-pureza: #FAFAFA;
-      --gris-suave: #e0e0e0;
-      --gris-natural: #B0BEC5;
+      --gris: #ccc;
+      --gris-fondo: #f3f4f6;
     }
 
     body {
       font-family: 'Nunito', sans-serif;
-      background-color: var(--blanco-pureza);
-      color: var(--verde-oscuro);
+      background-color: var(--gris-fondo);
       margin: 0;
       padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
-    header, footer {
+    header {
       background-color: var(--verde-vitalidad);
       color: white;
-      padding: 1.5rem 0;
+      padding: 1rem 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 10;
     }
 
     .container-flex {
@@ -41,20 +48,20 @@
     .logo {
       display: flex;
       align-items: center;
-      font-size: 2.2rem;
+      font-size: 1.8rem;
       font-weight: 700;
       color: white;
     }
 
     .logo img {
-      height: 60px;
+      height: 50px;
       vertical-align: middle;
     }
 
     nav ul {
       list-style: none;
       display: flex;
-      gap: 2rem;
+      gap: 1.5rem;
       padding: 0;
       margin: 0;
     }
@@ -63,7 +70,7 @@
       color: white;
       text-decoration: none;
       font-weight: 700;
-      font-size: 1.2rem;
+      font-size: 1rem;
       transition: opacity 0.3s ease;
     }
 
@@ -73,9 +80,9 @@
 
     .cta-button {
       background-color: var(--verde-oscuro);
-      padding: 0.7rem 1.2rem;
+      padding: 0.6rem 1rem;
       border-radius: 8px;
-      font-size: 1.1rem;
+      font-size: 1rem;
       transition: background-color 0.3s;
     }
 
@@ -84,23 +91,51 @@
     }
 
     .container {
-      background-color: white;
-      max-width: 720px;
-      margin: 3rem auto;
-      padding: 2.5rem;
-      border-radius: 12px;
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
-      animation: fadeIn 0.4s ease-in-out;
+      display: flex;
+      max-width: 1300px;  /* Aumentado desde 1100px */
+      margin: 6rem auto 3rem auto;
+      gap: 4rem;           /* Más separación entre form y resumen */
+      padding: 0 2rem;
+      flex: 1;
+      align-items: flex-start;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+
+    .formulario {
+      background: #fff;
+      padding: 3rem;
+      border-radius: 16px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+      flex: 2.5;                       /* Le damos más espacio relativo */
+      font-size: 1.1rem;
+      width: 750px;
+    }
+
+
+    .resumen {
+      background: var(--verde-claro);
+      padding: 2rem;
+      border-radius: 16px;
+      flex: 1.2;                      /* Sigue visible, pero no compite con el formulario */
+      position: sticky;
+      top: 7rem;
+      height: fit-content;
+      font-size: 1rem;
+      width: 350px;;
+    }
+
+
+
+    .step {
+      display: none;
+    }
+
+    .step.active {
+      display: block;
     }
 
     h2 {
-      text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
       color: var(--verde-oscuro);
     }
 
@@ -108,187 +143,277 @@
       display: block;
       margin-bottom: 0.5rem;
       font-weight: 600;
-      color: #374151;
     }
 
-    input, select {
+    input[type="number"],
+    input[type="text"] {
       width: 100%;
       padding: 0.7rem;
-      border: 1px solid var(--gris-suave);
-      border-radius: 8px;
       margin-bottom: 1.5rem;
-      font-size: 1rem;
-      background-color: #f9f9f9;
-      transition: box-shadow 0.3s, border-color 0.3s;
+      border: 1px solid var(--gris);
+      border-radius: 8px;
     }
 
-    input:focus, select:focus {
-      border-color: var(--verde-vitalidad);
-      outline: none;
-      box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+    .options {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
     }
 
-    button {
-      width: 100%;
-      padding: 0.9rem;
+    .option-btn {
+      flex: 1;
+      padding: 1rem;
+      border: 2px solid var(--gris);
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: bold;
+      background-color: white;
+      transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    .option-btn.selected {
       background-color: var(--verde-vitalidad);
       color: white;
-      font-weight: 700;
+      border-color: var(--verde-oscuro);
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+    }
+
+    .buttons button {
+      background-color: var(--verde-vitalidad);
+      color: white;
+      padding: 0.8rem 1.5rem;
       border: none;
       border-radius: 8px;
-      font-size: 1rem;
       cursor: pointer;
-      transition: background-color 0.3s;
+      font-size: 1rem;
     }
 
-    button:hover {
-      background-color: var(--verde-oscuro);
-    }
-
-    .card {
-      display: none;
-      margin-top: 2.5rem;
-      background-color: var(--verde-claro);
-      border-left: 6px solid var(--verde-vitalidad);
-      padding: 1.8rem;
-      border-radius: 12px;
-      animation: fadeIn 0.4s ease-in-out;
-    }
-
-    .card h2 {
+    .resumen h3 {
       margin-top: 0;
       color: var(--verde-oscuro);
     }
 
-    .info {
-      font-size: 1rem;
+    .resumen p {
       margin: 0.5rem 0;
+      font-size: 0.95rem;
     }
 
-    .highlight {
-      font-weight: bold;
-      color: var(--verde-oscuro);
-    }
-
-    footer p {
-      text-align: center;
-      margin: 0;
-      font-size: 1.1rem;
-      padding-top: 0.5rem;
+    footer {
+      background-color: var(--verde-vitalidad);
       color: white;
+      text-align: center;
+      padding: 1rem 0;
+      margin-top: auto;
     }
+
+    .guardar-btn {
+      background-color: var(--verde-oscuro);
+      color: white;
+      padding: 0.9rem 2rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      margin-top: 1rem;
+      width: 60%;
+      display: block;
+    }
+
+    .guardar-btn:hover {
+      background-color: #27692b;
+      transform: translateY(-2px);
+    }
+
   </style>
 </head>
 <body>
+
+  <!-- Navbar -->
   <header>
     <div class="container-flex">
       <div class="logo">
-        <img src="/media/images/nutriflowlogo.png" alt="NutriFlow Logo" />
+        <img src="/media/images/nutriflowlogo.png" alt="Logo NutriFlow" />
         <span style="margin-left: 12px;">NutriFlow</span>
       </div>
       <nav>
         <ul>
           <li><a href="/">Inicio</a></li>
-          <li><a href="/perfil/">Perfil</a></li>
           <li><a href="/supermarket">Supermercado</a></li>
+          <li><a href="perfil/">Perfil</a></li>
+          <li><a href="{% url 'generate_diet' %}">Generar Dieta</a></li>
           {% if user.is_authenticated %}
-          <li><a href="{% url 'logoutaccount' %}" class="cta-button">Logout ({{ user.username }})</a></li>
-      {% else %}
-          <li><a href="{% url 'loginaccount' %}">Login</a></li>
-          <li><a href="{% url 'signupaccount' %}" class="cta-button">Get Started</a></li>
-      {% endif %}
+            <li><a href="{% url 'logoutaccount' %}" class="cta-button">Cerrar sesión ({{ user.username }})</a></li>
+          {% else %}
+            <li><a href="{% url 'loginaccount' %}">Iniciar sesión</a></li>
+            <li><a href="{% url 'signupaccount' %}" class="cta-button">Comenzar</a></li>
+          {% endif %}
         </ul>
       </nav>
     </div>
   </header>
 
   <div class="container">
-    <h2>Configura tus Preferencias</h2>
-    <form id="preferencesForm" method="POST" action="{% url 'save_preferences' %}">
-      {% csrf_token %}
+    <form id="preferencesForm" class="formulario">
+      <div class="step active" data-step="1">
+        <h2>1. Información Personal</h2>
 
-      <label for="genero">Género:</label>
-      <select name="genero" id="genero" required>
-        <option value="male" {% if preferences.genero == "male" %}selected{% endif %}>Hombre</option>
-        <option value="female" {% if preferences.genero == "female" %}selected{% endif %}>Mujer</option>
-      </select>
+        <label>Género:</label>
+        <div class="options" id="genero">
+          <div class="option-btn" data-value="male">Hombre</div>
+          <div class="option-btn" data-value="female">Mujer</div>
+        </div>
 
-      <label for="objetivo">Objetivo Nutricional:</label>
-      <select name="objetivo" id="objetivo" required>
-        <option value="lose_weight" {% if preferences.objetivo == "lose_weight" %}selected{% endif %}>Bajar de peso</option>
-        <option value="improve_health" {% if preferences.objetivo == "improve_health" %}selected{% endif %}>Mejorar mi salud</option>
-        <option value="gain_weight" {% if preferences.objetivo == "gain_weight" %}selected{% endif %}>Subir de peso</option>
-      </select>
+        <label>Edad:</label>
+        <input type="number" name="edad" required>
 
-      <label for="edad">Edad:</label>
-      <input type="number" name="edad" id="edad" value="{{ preferences.edad }}" required>
+        <label>Peso (kg):</label>
+        <input type="number" name="peso" required>
 
-      <label for="peso">Peso (kg):</label>
-      <input type="number" name="peso" id="peso" value="{{ preferences.peso }}" required>
+        <label>Altura (cm):</label>
+        <input type="number" name="altura" required>
+      </div>
 
-      <label for="altura">Altura (cm):</label>
-      <input type="number" name="altura" id="altura" value="{{ preferences.altura }}" required>
+      <div class="step" data-step="2">
+        <h2>2. Estilo de Vida</h2>
 
-      <label for="nivel_actividad">Nivel de actividad física:</label>
-      <select name="nivel_actividad" id="nivel_actividad" required>
-        <option value="sedentario" {% if preferences.nivel_actividad == "sedentario" %}selected{% endif %}>Sedentario</option>
-        <option value="ligero" {% if preferences.nivel_actividad == "ligero" %}selected{% endif %}>Ligero</option>
-        <option value="moderado" {% if preferences.nivel_actividad == "moderado" %}selected{% endif %}>Moderado</option>
-        <option value="activo" {% if preferences.nivel_actividad == "activo" %}selected{% endif %}>Activo</option>
-        <option value="muy_activo" {% if preferences.nivel_actividad == "muy_activo" %}selected{% endif %}>Muy Activo</option>
-      </select>
+        <label>Nivel de actividad física:</label>
+        <div class="options" id="actividad">
+          <div class="option-btn" data-value="sedentario">Sedentario</div>
+          <div class="option-btn" data-value="ligero">Ligero</div>
+          <div class="option-btn" data-value="moderado">Moderado</div>
+          <div class="option-btn" data-value="activo">Activo</div>
+          <div class="option-btn" data-value="muy_activo">Muy Activo</div>
+        </div>
 
-      <label for="presupuesto">Presupuesto semanal (COP):</label>
-      <input type="number" name="presupuesto" id="presupuesto" value="{{ preferences.presupuesto }}" required>
+        <label>Objetivo:</label>
+        <div class="options" id="objetivo">
+          <div class="option-btn" data-value="lose_weight">Bajar de peso</div>
+          <div class="option-btn" data-value="improve_health">Mejorar salud</div>
+          <div class="option-btn" data-value="gain_weight">Subir de peso</div>
+        </div>
+      </div>
 
-      <label for="alergias">Alergias alimentarias (separadas por comas):</label>
-      <input type="text" name="alergias" id="alergias" value="{{ preferences.alergias }}">
+      <div class="step" data-step="3">
+        <h2>3. Detalles Finales</h2>
 
-      <button type="submit">Guardar</button>
+        <label>Presupuesto semanal (COP):</label>
+        <input type="number" name="presupuesto" required>
+
+        <label>Alergias (separadas por comas):</label>
+        <input type="text" name="alergias">
+
+        <button type="submit" class="guardar-btn">Guardar preferencias</button>
+
+      </div>
+
+      <div class="buttons">
+        <button type="button" id="prevBtn">Atrás</button>
+        <button type="button" id="nextBtn">Siguiente</button>
+      </div>
     </form>
 
-    <div id="nutritionalCard" class="card">
-      <h2>Requerimientos Nutricionales</h2>
-      <p class="info">Calorías diarias: <span class="highlight" id="calorias"></span> kcal</p>
-      <p class="info">Proteínas: <span class="highlight" id="proteinas"></span> g</p>
-      <p class="info">Carbohidratos: <span class="highlight" id="carbohidratos"></span> g</p>
-      <p class="info">Grasas: <span class="highlight" id="grasas"></span> g</p>
-    </div>
+    <aside class="resumen">
+      <h3>Resumen</h3>
+      <p><strong>Género:</strong> <span id="resGenero">-</span></p>
+      <p><strong>Edad:</strong> <span id="resEdad">-</span></p>
+      <p><strong>Peso:</strong> <span id="resPeso">-</span> kg</p>
+      <p><strong>Altura:</strong> <span id="resAltura">-</span> cm</p>
+      <p><strong>Actividad:</strong> <span id="resActividad">-</span></p>
+      <p><strong>Objetivo:</strong> <span id="resObjetivo">-</span></p>
+      <p><strong>Presupuesto:</strong> <span id="resPresupuesto">-</span> COP</p>
+      <p><strong>Alergias:</strong> <span id="resAlergias">-</span></p>
+    </aside>
   </div>
 
+  <!-- Footer -->
   <footer>
-    <div class="footer">
-      <p>&copy; 2025 NutriFlow. Todos los derechos reservados.</p>
-    </div>
+    <p>&copy; 2025 NutriFlow. Todos los derechos reservados.</p>
   </footer>
 
   <script>
-    document.getElementById('preferencesForm').addEventListener('submit', function(event) {
-      event.preventDefault();
+    const steps = document.querySelectorAll('.step');
+    let currentStep = 0;
 
-      let form = this;
-      let formData = new FormData(form);
+    const updateResumen = () => {
+      document.getElementById("resGenero").textContent = document.querySelector("#genero .selected")?.textContent || "-";
+      document.getElementById("resActividad").textContent = document.querySelector("#actividad .selected")?.textContent || "-";
+      document.getElementById("resObjetivo").textContent = document.querySelector("#objetivo .selected")?.textContent || "-";
+      document.getElementById("resEdad").textContent = document.querySelector('[name="edad"]').value;
+      document.getElementById("resPeso").textContent = document.querySelector('[name="peso"]').value;
+      document.getElementById("resAltura").textContent = document.querySelector('[name="altura"]').value;
+      document.getElementById("resPresupuesto").textContent = document.querySelector('[name="presupuesto"]').value;
+      document.getElementById("resAlergias").textContent = document.querySelector('[name="alergias"]').value || "-";
+    };
 
-      fetch(form.action, {
-        method: 'POST',
-        body: formData
+    const showStep = (index) => {
+      steps.forEach((step, i) => step.classList.toggle('active', i === index));
+      document.getElementById('prevBtn').style.display = index === 0 ? 'none' : 'inline-block';
+      document.getElementById('nextBtn').style.display = index === steps.length - 1 ? 'none' : 'inline-block';
+    };
+
+    document.querySelectorAll('.option-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const group = btn.parentElement;
+        group.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        updateResumen();
+      });
+    });
+
+    document.querySelectorAll('input').forEach(input => {
+      input.addEventListener('input', updateResumen);
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      if (currentStep < steps.length - 1) {
+        currentStep++;
+        showStep(currentStep);
+      }
+    });
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      if (currentStep > 0) {
+        currentStep--;
+        showStep(currentStep);
+      }
+    });
+
+    document.getElementById('preferencesForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      formData.append("genero", document.querySelector("#genero .selected")?.dataset.value || "");
+      formData.append("objetivo", document.querySelector("#objetivo .selected")?.dataset.value || "");
+      formData.append("nivel_actividad", document.querySelector("#actividad .selected")?.dataset.value || "");
+
+      const csrftoken = document.querySelector('[name=csrf-token]').content;
+
+      fetch("{% url 'save_preferences' %}", {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": csrftoken
+        },
+        body: formData,
       })
-      .then(response => response.json())
+      .then(resp => resp.json())
       .then(data => {
         if (data.success) {
-          const card = document.getElementById('nutritionalCard');
-          card.style.display = 'block';
-          document.getElementById('calorias').textContent = data.calorias;
-          document.getElementById('proteinas').textContent = data.proteinas;
-          document.getElementById('carbohidratos').textContent = data.carbohidratos;
-          document.getElementById('grasas').textContent = data.grasas;
-          card.scrollIntoView({ behavior: 'smooth' });
+          alert("Preferencias guardadas con éxito.");
         } else {
-          alert("Hubo un error al guardar las preferencias.");
+          alert("Hubo un error al guardar.");
         }
-      })
-      .catch(error => console.error('Error:', error));
+      });
     });
+
+    showStep(currentStep);
   </script>
+
 </body>
 </html>

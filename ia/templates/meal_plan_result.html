@@ -158,40 +158,50 @@
       background-color: #27692b;
     }
 
-    .meal-plan-content {
-      background-color: var(--gris-natural);
-      border-radius: 10px;
-      padding: 2rem;
-      margin-top: 2rem;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      font-size: 1.1rem;
-      line-height: 1.8;
-      text-align: left;
-      white-space: pre-wrap; /* Esto hace que el texto se ajuste adecuadamente */
-      max-height: 500px; /* Limita la altura máxima */
-      overflow-y: auto; /* Añade desplazamiento vertical si el contenido es largo */
-    }
-
+    /* Estilos mejorados para la tabla */
     table {
       width: 100%;
       margin-top: 2rem;
       border-collapse: collapse;
       font-size: 1.1rem;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
     }
 
     th, td {
-      padding: 1rem;
-      border: 1px solid #ddd;
+      padding: 1rem 1.5rem;  /* Espaciado en las celdas */
       text-align: left;
     }
 
     th {
       background-color: var(--verde-vitalidad);
       color: white;
+      font-weight: 700;  /* Encabezados en negrita */
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em; /* Espaciado de letras */
     }
 
-    tr:nth-child(even) {
-      background-color: #f9f9f9;
+    td {
+      background-color: #f9f9f9;  /* Fondo claro para las celdas */
+      font-size: 1.1rem;
+    }
+
+    tr:nth-child(even) td {
+      background-color: var(--gris-natural); /* Alternancia más suave */
+    }
+
+    tr:hover td {
+      background-color: var(--verde-tranquilo); /* Efecto hover sobre filas */
+      color: white;
+      cursor: pointer;  /* Cambio de cursor al pasar sobre las filas */
+    }
+
+    tr:last-child td {
+      background-color: var(--verde-profundo);  /* Fila de totales con fondo oscuro */
+      color: white;
+      font-weight: 700;
     }
 
   </style>
@@ -240,6 +250,29 @@
         <div class="meal-plan-content">
           <pre>{{ meal_plan|linebreaksbr }}</pre>
         </div>
+        
+        <table>
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Marca</th>
+              <th>Supermercado</th>
+              <th>Cantidad</th>
+              <th>Precio Total (€)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Ejemplo de fila -->
+            <tr>
+              <td>Leche de almendra</td>
+              <td>Almond Breeze</td>
+              <td>Supermercado X</td>
+              <td>200ml</td>
+              <td>1.50€</td>
+            </tr>
+            <!-- Otras filas generadas -->
+          </tbody>
+        </table>
       {% endif %}
     {% endif %}
   </main>

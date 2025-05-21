@@ -179,12 +179,11 @@
       </div>
       <nav>
         <ul>
-          
           {% if user.is_authenticated %}
-          <li><a href="/supermarket">Supermercado</a></li>
-          <li><a href="/preferences">Preferencias</a></li>
-          <li><a href="perfil/">Perfil</a></li>
-          <li><a href="{% url 'generate_diet' %}">Generar Dieta</a></li>
+            <li><a href="/supermarket">Supermercado</a></li>
+            <li><a href="/preferences">Preferencias</a></li>
+            <li><a href="perfil/">Perfil</a></li>
+            <li><a href="{% url 'generate_diet' %}">Generar Dieta</a></li>
             <li><a href="{% url 'logoutaccount' %}" class="cta-button">Cerrar sesión ({{ user.username }})</a></li>
           {% else %}
             <li><a href="{% url 'loginaccount' %}">Iniciar sesión</a></li>

@@ -66,10 +66,10 @@ def profile_view(request):
         })
 
     # Aquí podrías usar valores reales de logs diarios si los tienes
-    calorias_consumidas = 1200
-    proteinas_consumidas = 60
-    carbohidratos_consumidos = 150
-    grasas_consumidas = 40
+    calorias_consumidas = 400
+    proteinas_consumidas = 50
+    carbohidratos_consumidos = 90
+    grasas_consumidas = 17
 
     def porcentaje(actual, objetivo):
         return min(round((actual / objetivo) * 100, 2), 100) if objetivo > 0 else 0

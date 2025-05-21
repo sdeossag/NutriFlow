@@ -10,5 +10,5 @@ urlpatterns = [
     path('home/', mealViews.home, name='home'),
     path('loginaccount/', views.loginaccount, name='loginaccount'),
     path('logout/', views.logoutaccount, name='logoutaccount'),
-    path('perfil/', profile_view, name='profile'),
+    path('perfil/', profile_view, name='perfil'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

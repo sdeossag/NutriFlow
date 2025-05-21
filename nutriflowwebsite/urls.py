@@ -30,7 +30,8 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('loginaccount/', accountViews.loginaccount),
     path('accounts/', include('accounts.urls')),
-    path('perfil/', accountViews.profile_view, name='profile'),
+    path('accounts/home/perfil/', accountViews.profile_view, name='perfil'),
+    path('perfil/', accountViews.profile_view, name='perfil'),	
     path('supermarket/', include('supermarket.urls')),
     path('ia/', include('ia.urls')),
 

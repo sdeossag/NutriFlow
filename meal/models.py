@@ -14,4 +14,11 @@ class Meal(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+class MealPlan(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    plan_json = models.JSONField()
+
+    def __str__(self):
+        return f"Plan de {self.user.username} - {self.created_at.strftime('%Y-%m-%d')}"

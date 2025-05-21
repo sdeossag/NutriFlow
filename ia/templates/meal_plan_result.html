@@ -120,17 +120,25 @@
   <main class="container mt-5 mb-5 pt-5">
     <h2 class="mb-4 text-center text-success">Tu Plan de Comidas Personalizado</h2>
 
-    {% if error %}
-      <div class="alert alert-danger">{{ error|linebreaksbr }}</div>
-    {% else %}
-      <div class="text-center mb-4">
-        <form method="post">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-success">Generar mi dieta</button>
-        </form>
+      <div class="d-flex flex-column align-items-center gap-3 mb-4">
+        {% if meal_plan_json %}
+          <!-- Solo mostrar "Regenerar Dieta" si ya hay un plan -->
+          <form method="post" action="{% url 'generate_diet' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-success px-4">Regenerar Dieta</button>
+          </form>
+        {% else %}
+          <!-- Solo mostrar "Generar mi dieta" si no hay un plan todavía -->
+          <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success px-4">Generar mi dieta</button>
+          </form>
+        {% endif %}
       </div>
-
+      
       {% if meal_plan_json %}
+
+
         <div class="row">
           {% for meal in meal_plan_json.meals %}
             <div class="col-md-6 mb-4">
@@ -187,7 +195,8 @@
               <th>Marca</th>
               <th>Supermercado</th>
               <th>Cantidad</th>
-              <th>Precio (€)</th>
+              <th>Precio por porcion (€)</th>
+              <th>Precio producto completo (€)</th>
             </tr>
           </thead>
           <tbody>
@@ -197,7 +206,8 @@
               <td>{{ item.marca }}</td>
               <td>{{ item.supermercado }}</td>
               <td>{{ item.cantidad }}</td>
-              <td>{{ item.precio }}</td>
+              <td>{{ item.precio_porcion }}</td>
+              <td>{{ item.precio_producto_completo }}</td>
             </tr>
             {% endfor %}
           </tbody>
@@ -234,7 +244,7 @@
           </div>
         {% endif %}
       {% endif %}
-    {% endif %}
+
   </main>
 
   <footer style="background-color: #4CAF50;" class="text-white text-center py-3 mt-auto">

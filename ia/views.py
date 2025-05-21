@@ -1,6 +1,10 @@
 from django.shortcuts import render
 from preferences.models import Preferences
 from supermarket.models import Supermarket
+from accounts.models import User
+from meal.models import MealPlan
+from django.shortcuts import redirect
+from django.urls import reverse
 import openai
 import os
 from dotenv import load_dotenv
@@ -14,6 +18,14 @@ if not openai.api_key:
     raise ValueError("No se cargó la clave API de OpenAI correctamente.")
 
 def generate_meal_plan(request):
+
+    if request.method == 'POST':
+        if 'meal_plan_data' in request.session:
+            del request.session['meal_plan_data']
+        if 'alerta_presupuesto' in request.session:
+            del request.session['alerta_presupuesto']
+        
+
     user = request.user
     prefs = Preferences.objects.filter(user=user).first()
 
@@ -47,7 +59,12 @@ Cada comida debe:
 - No superar el presupuesto disponible: {prefs.presupuesto} €
 - Indicar cantidad, preparación y macronutrientes
 
-⚠️ El total diario del plan debe cumplir estas metas nutricionales con un margen máximo de ±5%:
+⚠️ El total diario del plan debe cumplir estas metas nutricionales con un margen máximo de ±5%
+
+📌 En la lista de compras, para cada producto incluye:
+- `cantidad_usada`: la cantidad utilizada del producto (ej. 100g)
+- `precio_porcion`: precio correspondiente solo a la cantidad usada
+- `precio_producto_completo`: precio total del paquete o unidad vendida (según aparece en el supermercado)
 
 El formato de salida debe ser estrictamente JSON con esta estructura exacta (sin explicaciones):
 """
@@ -85,7 +102,9 @@ El formato de salida debe ser estrictamente JSON con esta estructura exacta (sin
       "marca": "...",
       "supermercado": "...",
       "cantidad": "...",
-      "precio": ...
+      "precio_porcion": ...
+      "precio_producto_completo": ...
+
     }
   ],
   "presupuesto": {
@@ -141,6 +160,21 @@ El formato de salida debe ser estrictamente JSON con esta estructura exacta (sin
                 return render(request, 'meal_plan_result.html', {
                     'error': "El plan generado no contiene datos completos. Intenta nuevamente."
                 })
+            
+            if not meal_plan_data.get("meals") or not meal_plan_data.get("shopping_list"):
+                return render(request, 'meal_plan_result.html', {
+                    'error': "El plan generado no contiene datos completos. Intenta nuevamente."
+                })
+
+            # GUARDAR EN BASE DE DATOS
+
+            MealPlan.objects.create(user=user, plan_json=meal_plan_data)
+
+
+
+            # Cálculo visual del presupuesto
+            total_usado = meal_plan_data["presupuesto"]["total_usado"]
+            ...
 
             # Cálculo visual del presupuesto
             total_usado = meal_plan_data["presupuesto"]["total_usado"]
@@ -166,9 +200,25 @@ El formato de salida debe ser estrictamente JSON con esta estructura exacta (sin
         except Exception as e:
             return render(request, 'meal_plan_result.html', {'error': str(e)})
 
-        return render(request, 'meal_plan_result.html', {
-            'meal_plan_json': meal_plan_data,
-            'alerta_presupuesto': alerta_presupuesto
-        })
+        request.session['meal_plan_data'] = meal_plan_data
+        request.session['alerta_presupuesto'] = alerta_presupuesto
+
+        # Redirige a una nueva URL para mostrar los resultados
+        return redirect(reverse('mostrar_plan_generado'))
 
     return render(request, 'meal_plan_result.html')
+
+def mostrar_plan_generado(request):
+    meal_plan_data = request.session.get('meal_plan_data')
+    alerta_presupuesto = request.session.get('alerta_presupuesto')
+
+    if not meal_plan_data:
+        return render(request, 'meal_plan_result.html', {
+            'error': 'No hay un plan para mostrar. Por favor genera uno primero.'
+        })
+
+    return render(request, 'meal_plan_result.html', {
+        'meal_plan_json': meal_plan_data,
+        'alerta_presupuesto': alerta_presupuesto
+    })
+
